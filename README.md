@@ -2,8 +2,8 @@
 
 A simple but powerfull physical units converter for Wox.
 
-*Home* : https://github.com/gissehel/Wox-UnitConverter
-*Keyword* : `unit`
+* **Home** : https://github.com/gissehel/Wox-UnitConverter
+* **Keyword** : `unit`
 
 # Usage by example
 
@@ -175,7 +175,7 @@ unit 0.2 cm -> in.min-1
 
 ![(unit 0.2 cm -> in.min-1)](doc/capture-07-cm_to_in_by_min.png)
 
-It will take *4.72 s* with a speed of *1 in by minute* to make *0.2 cm*.
+It will take **4.72 s** with a speed of **1 in by minute** to make **0.2 cm**.
 
 
 ``` 
@@ -184,12 +184,12 @@ unit 0.2 cm -> 3.1 in.min-1
 
 ![(unit 0.2 cm -> 3.1 in.min-1)](doc/capture-07-cm_to_3.1in_by_min.png)
 
-It will take *1.52 s* with a speed of *3.1 in by minute* to make *0.2 cm*.
+It will take **1.52 s** with a speed of **3.1 in by minute** to make **0.2 cm**.
 
 ## Real life computer/mobile speed example
 
-You have a quota of *50 GB* of data with your mobile phone contract this month.
-Your phone can download up to *60 Mibit/s*.
+You have a quota of **50 GB** of data with your mobile phone contract this month.
+Your phone can download up to **60 Mibit/s**.
 
 How long will you be able to last by downloading full speed ?
 
@@ -199,7 +199,7 @@ unit 50 GB -> 60 Mibit/s
 
 ![(unit 50 GB -> 60 Mibit/s)](doc/capture-08-50_GB_to_60_Mibit_by_s.png)
 
-6357.829 s ! Doesn't make any sense to me. Let's express that in hour !
+**6357.829 s** ! Doesn't make any sense to me. Let's express that in hour !
 
 ``` 
 unit 50 GB -> 60 Mibit/s : h
@@ -207,12 +207,12 @@ unit 50 GB -> 60 Mibit/s : h
 
 ![(unit 50 GB -> 60 Mibit/s : h)](doc/capture-08-50_GB_to_60_Mibit_by_s_h.png)
 
-The answer is 1.766 hour.
+The answer is **1.766 hour**.
 
 You'll expire you quota in less than 2 hours by downloading full speed.
 
 
-Now let's take a more slow speed of 2 Mibit/s. How long will you last in days ?
+Now let's take a slower speed of **2 Mibit/s**. How long will you last in days ?
 
 ``` 
 unit 50 GB -> 2 Mibit/s : d
@@ -220,11 +220,11 @@ unit 50 GB -> 2 Mibit/s : d
 
 ![(unit 50 GB -> 2 Mibit/s : d)](doc/capture-08-50_GB_to_2_Mibit_by_s_d.png)
 
-You'll last 2.2 days.
+You'll last **2.2 days**.
 
 ## Real life car example (for non US)
 
-How much is the distance 300 km if you convert it to the speed of 120 km/h ?
+How much is the distance **300 km** if you convert it to the speed of **120 km/h** ?
 
 ``` 
 unit 300 km -> 120 km/h
@@ -232,7 +232,7 @@ unit 300 km -> 120 km/h
 
 ![(unit 300 km -> 120 km/h)](doc/capture-09-300_km_to_120_km_by_h.png)
 
-It's 9000s. How many hours is that ?
+It's **9000s**. How many hours is that ?
 
 ``` 
 unit 300 km -> 120 km/h : h
@@ -240,4 +240,4 @@ unit 300 km -> 120 km/h : h
 
 ![(unit 300 km -> 120 km/h : h)](doc/capture-09-300_km_to_120_km_by_h_h.png)
 
-It's 2.5 hours.
+It's **2.5 hours**.
