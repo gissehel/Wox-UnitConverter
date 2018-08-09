@@ -153,7 +153,7 @@ unit 8 m -> 30 cm
 
 ![(unit 8 m -> 30 cm)](doc/capture-07-8m_to_30cm.png)
 
-There is about 26.6... times 30 cm in 8 m.
+There is about **26.6...** times **30 cm** in **8 m**.
 
 ## Support for conversion to not homogenous units
 
@@ -165,7 +165,7 @@ unit 8 m2 -> 30 cm
 
 ![(unit 8 m2 -> 30 cm)](doc/capture-07-8m2_to_30cm.png)
 
-Converting 8 m2 to 30 cm doesn't make any sense ? Well, in fact, if you want to convert 8 m2 to 30 cm, you'll need to take 26.66.. m long of your 30cm large to make 8 m2.
+Converting **8 m<sup>2</sup>** to **30 cm** doesn't make any sense ? Well, in fact, if you want to convert **8 m<sup>2</sup>** to **30 cm**, you'll need to take **26.66.. m** long of your **30 cm** large to make **8 m<sup>2</sup>**.
 
 It does make sense after all. In fact, it's function that is the most usefull in this plugin.
 
