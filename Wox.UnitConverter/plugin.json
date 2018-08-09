@@ -1,0 +1,12 @@
+﻿{
+  "ID": "98177130970618000000000000000001",
+  "ActionKeyword": "unit",
+  "Name": "Unit converter",
+  "Description": "Convert between physical units",
+  "Author": "gissehel",
+  "Version": "1.0.0",
+  "Language": "csharp",
+  "Website": "https://github.com/gissehel/Wox-UnitConverter",
+  "IcoPath": "Unitlib-64.png",
+  "ExecuteFileName": "Wox.UnitConverter.dll"
+}
