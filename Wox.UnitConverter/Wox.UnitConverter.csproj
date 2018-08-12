@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unit.Lib" Version="1.0.2" />
-    <PackageReference Include="Wox.Plugin" Version="1.2.0.486" />
+    <PackageReference Include="Unit.Lib" Version="1.0.3" />
+    <PackageReference Include="Wox.EasyHelper" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
