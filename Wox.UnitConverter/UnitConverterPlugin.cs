@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Unit.Lib.Core.DomainModel;
+﻿using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
 using Unit.Lib.Service;
 using Wox.EasyHelper;
-using Wox.Plugin;
 using Wox.UnitConverter.Service;
 
 namespace Wox.UnitConverter
