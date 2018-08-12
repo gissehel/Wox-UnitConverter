@@ -4,7 +4,7 @@
   "Name": "Unit converter",
   "Description": "Convert between physical units",
   "Author": "gissehel",
-  "Version": "1.0.1",
+  "Version": "1.0.2",
   "Language": "csharp",
   "Website": "https://github.com/gissehel/Wox-UnitConverter",
   "IcoPath": "Unitlib-64.png",
