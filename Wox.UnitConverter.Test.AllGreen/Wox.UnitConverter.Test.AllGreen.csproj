@@ -8,8 +8,8 @@
     <PackageReference Include="AllGreen.Lib" Version="1.0.1" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="Wox.EasyHelper" Version="1.0.1" />
-    <PackageReference Include="Wox.EasyHelper.Test.Mock" Version="1.0.1" />
+    <PackageReference Include="Wox.EasyHelper" Version="1.0.2" />
+    <PackageReference Include="Wox.EasyHelper.Test.Mock" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
