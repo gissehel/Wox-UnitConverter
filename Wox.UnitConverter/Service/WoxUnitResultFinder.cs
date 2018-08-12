@@ -4,8 +4,6 @@ using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
 using Wox.EasyHelper;
 using Wox.EasyHelper.Core.Service;
-using Wox.EasyHelper.DomainModel;
-using Wox.UnitConverter.Wox.EasyHelper.Tool;
 
 namespace Wox.UnitConverter.Service
 {

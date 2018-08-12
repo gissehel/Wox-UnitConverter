@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Unit.Lib" Version="1.0.3" />
-    <PackageReference Include="Wox.EasyHelper" Version="1.0.0" />
+    <PackageReference Include="Wox.EasyHelper" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
