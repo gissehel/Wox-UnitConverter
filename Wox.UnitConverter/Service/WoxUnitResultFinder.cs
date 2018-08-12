@@ -5,6 +5,7 @@ using Unit.Lib.Core.Service;
 using Wox.EasyHelper;
 using Wox.EasyHelper.Core.Service;
 using Wox.EasyHelper.DomainModel;
+using Wox.UnitConverter.Wox.EasyHelper.Tool;
 
 namespace Wox.UnitConverter.Service
 {
@@ -84,7 +85,7 @@ namespace Wox.UnitConverter.Service
                             result = UnitService.Convert(result, targetExtraUnit);
                         }
                         outputUnit = result.UnitElement.Name;
-                        resultAsString = string.Format("({0})", result.AsString);
+                        resultAsString = "({0})".FormatWith(result.AsString);
                     }
 
                     if (targetUnit.Value.Value == targetUnit.Value.GetNeutral().Value)
@@ -93,7 +94,7 @@ namespace Wox.UnitConverter.Service
                     }
                     else
                     {
-                        targetUnitAsString = string.Format("({0})", targetUnit.AsString);
+                        targetUnitAsString = "({0})".FormatWith(targetUnit.AsString);
                     }
                     if (targetUnit.UnitElement.GetDimension().QuantityCount != 0)
                     {
@@ -103,10 +104,10 @@ namespace Wox.UnitConverter.Service
                         }
                         else
                         {
-                            outputUnit = outputUnit + " x " + targetUnit.UnitElement.Name;
+                            outputUnit = "{0} x {1}".FormatWith(outputUnit, targetUnit.UnitElement.Name);
                         }
                     }
-                    output = string.Format("{0} {1}", resultAsString, targetUnitAsString);
+                    output = "{0} {1}".FormatWith(resultAsString, targetUnitAsString);
                 }
                 else
                 {
@@ -126,11 +127,11 @@ namespace Wox.UnitConverter.Service
                 }
                 if (outputUnit != null)
                 {
-                    title = string.Format("{0} ( {1} -> {2} )", title, inputUnit, outputUnit);
+                    title = "{0} ( {1} -> {2} )".FormatWith(title, inputUnit, outputUnit);
                 }
                 else
                 {
-                    title = string.Format("{0} ( {1} -> )", title, inputUnit);
+                    title = "{0} ( {1} -> )".FormatWith(title, inputUnit);
                 }
             }
             catch (Exception ex)
