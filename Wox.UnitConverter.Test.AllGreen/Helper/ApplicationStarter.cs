@@ -37,7 +37,9 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
             IDataAccessService dataAccessService = new DataAccessService(dataAccessConfigurationService);
             IPrefixDefinitionRepository prefixDefinitionRepository = new PrefixDefinitionRepository(dataAccessService);
             IUnitDefinitionRepository unitDefinitionRepository = new UnitDefinitionRepository(dataAccessService);
-            WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitService, prefixDefinitionRepository, unitDefinitionRepository);
+            IUnitConversionService unitConversionService = new UnitConversionService(unitService, prefixDefinitionRepository, unitDefinitionRepository);
+
+            WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitConversionService);
 
             dataAccessService.Init();
             woxUnitResultFinder.Init();
