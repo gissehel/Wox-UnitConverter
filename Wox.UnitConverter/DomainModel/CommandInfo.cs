@@ -11,5 +11,7 @@ namespace Wox.UnitConverter.DomainModel
         public string Subtitle { get; set; }
         public Action FinalAction { get; set; }
         public Func<WoxQuery, int, IEnumerable<WoxResult>> ResultGetter { get; set; }
+
+        public string Path { get; set; }
     }
 }

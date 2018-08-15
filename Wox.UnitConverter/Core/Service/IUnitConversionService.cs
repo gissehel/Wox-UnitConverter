@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Unit.Lib.Core.DomainModel;
 
 namespace Wox.UnitConverter.Core.Service
@@ -22,5 +23,9 @@ namespace Wox.UnitConverter.Core.Service
         void ImportFrom(string filename);
 
         bool CanImportFrom(string filename);
+
+        IEnumerable<UnitBaseName<ScalarFloat, float>> GetUnitBaseNames();
+
+        IEnumerable<UnitPrefix<ScalarFloat, float>> GetUnitPrefixes();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
 using Wox.EasyHelper;
@@ -281,5 +282,9 @@ namespace Wox.UnitConverter.Service
         {
             PrepareNewPrefixCreation(line)?.Item3?.Invoke();
         }
+
+        public IEnumerable<UnitBaseName<ScalarFloat, float>> GetUnitBaseNames() => UnitService.GetUnitBaseNames();
+
+        public IEnumerable<UnitPrefix<ScalarFloat, float>> GetUnitPrefixes() => UnitService.GetUnitPrefixes();
     }
 }
