@@ -1,10 +1,10 @@
 ﻿using AllGreen.Lib;
-using Wox.UnitConverter.AllGreen.Fixture;
+using Wox.UnitConverter.Test.AllGreen.Fixture;
 using Wox.UnitConverter.Test.AllGreen.Helper;
 
-namespace Wox.UnitConverter.AllGreen.Test
+namespace Wox.UnitConverter.Test.AllGreen.Test
 {
-    public class Prepare_common_context : TestBase<UnitConverterContext>
+    public class Prepare_common_context_test : TestBase<UnitConverterContext>
     {
         public override void DoTest() =>
             StartTest()

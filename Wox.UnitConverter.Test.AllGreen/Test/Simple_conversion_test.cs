@@ -1,8 +1,8 @@
 ﻿using AllGreen.Lib;
-using Wox.UnitConverter.AllGreen.Fixture;
+using Wox.UnitConverter.Test.AllGreen.Fixture;
 using Wox.UnitConverter.Test.AllGreen.Helper;
 
-namespace Wox.UnitConverter.AllGreen.Test
+namespace Wox.UnitConverter.Test.AllGreen.Test
 {
     public class Simple_conversion_test : TestBase<UnitConverterContext>
     {
@@ -11,18 +11,10 @@ namespace Wox.UnitConverter.AllGreen.Test
 
             .IsRunnable()
 
-            .Include<Prepare_common_context>()
+            .Include<Prepare_common_context_test>()
 
             .Using<Wox_bar_fixture>()
-            .DoAction(f => f.Write_query(@"unit"))
-            .EndUsing()
-
-            .UsingList<Wox_results_fixture>()
-            .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
-            .EndUsing()
-
-            .Using<Wox_bar_fixture>()
-            .DoAction(f => f.Write_query(@"unit 30g"))
+            .DoAction(f => f.Write_query(@"unit convert 30g"))
             .EndUsing()
 
             .UsingList<Wox_results_fixture>()

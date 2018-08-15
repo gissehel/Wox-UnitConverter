@@ -3,7 +3,7 @@ using System.Linq;
 using Wox.EasyHelper;
 using Wox.UnitConverter.Test.AllGreen.Helper;
 
-namespace Wox.UnitConverter.AllGreen.Fixture
+namespace Wox.UnitConverter.Test.AllGreen.Fixture
 {
     public class Wox_bar_fixture : FixtureBase<UnitConverterContext>
     {

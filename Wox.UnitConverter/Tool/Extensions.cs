@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wox.UnitConverter.Tool
 {
@@ -28,6 +24,27 @@ namespace Wox.UnitConverter.Tool
                 return new Tuple<string, string>(result.Item1.Trim(' ', '\t', '\r', '\n'), result.Item2.Trim(' ', '\t', '\r', '\n'));
             }
             return null;
+        }
+
+        public static Tuple<string, string, string> SeparateWithSymbolAndName(this string search, string affectationOperator)
+        {
+            var operatorFields = search.SeparateAndTrim(affectationOperator);
+            if (operatorFields == null)
+            {
+                return null;
+            }
+            var symbol = operatorFields.Item1;
+            var valueString = operatorFields.Item2;
+            var name = symbol;
+
+            var bracketFileds = valueString.SeparateAndTrim("[");
+            if (bracketFileds != null)
+            {
+                valueString = bracketFileds.Item1;
+                name = bracketFileds.Item2.TrimStart('[').TrimEnd(']');
+            }
+
+            return new Tuple<string, string, string>(name, symbol, valueString);
         }
     }
 }

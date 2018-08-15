@@ -23,6 +23,8 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
 
         public IWoxResultFinder WoxUnitResultFinder { get; set; }
 
+        public SystemServiceMock SystemService { get; set; }
+
         private string TestName { get; set; }
         public string TestPath => GetApplicationDataPath();
 
@@ -37,9 +39,12 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
             IDataAccessService dataAccessService = new DataAccessService(dataAccessConfigurationService);
             IPrefixDefinitionRepository prefixDefinitionRepository = new PrefixDefinitionRepository(dataAccessService);
             IUnitDefinitionRepository unitDefinitionRepository = new UnitDefinitionRepository(dataAccessService);
-            IUnitConversionService unitConversionService = new UnitConversionService(unitService, prefixDefinitionRepository, unitDefinitionRepository);
+            IFileGeneratorService fileGeneratorService = new FileGeneratorServiceMock();
+            IFileReaderService fileReaderService = new FileReaderServiceMock();
+            IUnitConversionService unitConversionService = new UnitConversionService(unitService, prefixDefinitionRepository, unitDefinitionRepository, fileGeneratorService, fileReaderService);
+            SystemServiceMock systemService = new SystemServiceMock();
 
-            WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitConversionService);
+            WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitConversionService, systemService);
 
             dataAccessService.Init();
             woxUnitResultFinder.Init();
@@ -47,6 +52,7 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
             WoxContextService = woxContextService;
             QueryService = queryService;
             WoxUnitResultFinder = woxUnitResultFinder;
+            SystemService = systemService;
 
             WoxContextService.AddQueryFetcher("unit", WoxUnitResultFinder);
         }

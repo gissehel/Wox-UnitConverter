@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unit.Lib.Core.DomainModel;
 
 namespace Wox.UnitConverter.Core.Service
@@ -13,12 +9,18 @@ namespace Wox.UnitConverter.Core.Service
 
         Tuple<string, string> Convert(string search);
 
-        Tuple<string, string> PrepareNewUnitCreation(string name, string symbol, string definiton);
+        Tuple<string, string, Action> PrepareNewUnitCreation(string line);
 
         void CreateNewUnit(string name, string symbol, string definiton);
 
-        Tuple<string, string> PrepareNewPrefixCreation(string name, string symbol, ScalarFloat factor, bool inverted);
+        Tuple<string, string, Action> PrepareNewPrefixCreation(string line);
 
-        void CreateNewPrefix(string name, string symbol, ScalarFloat factor, bool inverted);
+        void CreateNewPrefix(string name, string symbol, ScalarFloat factor, bool inverted, string definition);
+
+        void ExportTo(string filename);
+
+        void ImportFrom(string filename);
+
+        bool CanImportFrom(string filename);
     }
 }

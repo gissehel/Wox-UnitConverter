@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Wox.UnitConverter.Test.AllGreen.Helper;
 
-namespace Wox.UnitConverter.AllGreen.Fixture
+namespace Wox.UnitConverter.Test.AllGreen.Fixture
 {
     public class Wox_results_fixture : FixtureBase<UnitConverterContext>
     {

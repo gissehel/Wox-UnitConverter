@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
 using Wox.EasyHelper;
@@ -17,12 +13,16 @@ namespace Wox.UnitConverter.Service
         private IUnitService<ScalarFloat, float> UnitService { get; }
         private IPrefixDefinitionRepository PrefixDefinitionRepository { get; }
         private IUnitDefinitionRepository UnitDefinitionRepository { get; }
+        public IFileGeneratorService FileGeneratorService { get; }
+        public IFileReaderService FileReaderService { get; }
 
-        public UnitConversionService(IUnitService<ScalarFloat, float> unitService, IPrefixDefinitionRepository prefixDefinitionRepository, IUnitDefinitionRepository unitDefinitionRepository)
+        public UnitConversionService(IUnitService<ScalarFloat, float> unitService, IPrefixDefinitionRepository prefixDefinitionRepository, IUnitDefinitionRepository unitDefinitionRepository, IFileGeneratorService fileGeneratorService, IFileReaderService fileReaderService)
         {
             UnitService = unitService;
             PrefixDefinitionRepository = prefixDefinitionRepository;
             UnitDefinitionRepository = unitDefinitionRepository;
+            FileGeneratorService = fileGeneratorService;
+            FileReaderService = fileReaderService;
         }
 
         public Tuple<string, string> Convert(string search)
@@ -164,17 +164,6 @@ namespace Wox.UnitConverter.Service
             }
         }
 
-        public Tuple<string, string> PrepareNewUnitCreation(string name, string symbol, string definiton)
-        {
-            var unit = UnitService.Parse(definiton);
-
-            return new Tuple<string, string>
-                (
-                    "Create unit [{0}] (with name [{2}]) with value [{1}]".FormatWith(symbol, unit.AsString, name),
-                    "Define {0} with name {2} as {1} ({3})".FormatWith(symbol, unit.AsString, name, unit.UnitElement.AsString)
-                );
-        }
-
         public void CreateNewUnit(string name, string symbol, string definiton)
         {
             var unit = UnitService.Parse(definiton);
@@ -183,19 +172,114 @@ namespace Wox.UnitConverter.Service
             UnitDefinitionRepository.AddUnitDefinition(new UnitDefinition { Name = name, Symbol = symbol, Definition = unit.AsString });
         }
 
-        public Tuple<string, string> PrepareNewPrefixCreation(string name, string symbol, ScalarFloat factor, bool inverted)
-        {
-            return new Tuple<string, string>
-                (
-                    "Create prefix [{0}] (with name [{2}]) with prefix value [{1}{3}]".FormatWith(symbol, factor.AsString, name, inverted ? " inverted" : ""),
-                    "Define {0} with name {2} as {1}{3}".FormatWith(symbol, factor.AsString, name, inverted ? " inverted" : "")
-                );
-        }
-
-        public void CreateNewPrefix(string name, string symbol, ScalarFloat factor, bool inverted)
+        public void CreateNewPrefix(string name, string symbol, ScalarFloat factor, bool inverted, string definition)
         {
             UnitService.AddPrefix(name, symbol, "user", factor, inverted);
-            PrefixDefinitionRepository.AddPrefixDefinition(new PrefixDefinition { Name = name, Symbol = symbol, Factor = factor.Value, Inverted = inverted });
+            PrefixDefinitionRepository.AddPrefixDefinition(new PrefixDefinition { Name = name, Symbol = symbol, Definition = definition, Factor = factor.Value, Inverted = inverted });
+        }
+
+        public void ExportTo(string filename)
+        {
+            using (var fileGenerator = FileGeneratorService.CreateGenerator(filename))
+            {
+                foreach (var prefixDefinition in PrefixDefinitionRepository.GetPrefixDefinitions())
+                {
+                    fileGenerator.AddLine("{0}~{1}{2} [{3}]".FormatWith(prefixDefinition.Symbol, prefixDefinition.Inverted ? "1/" : "", prefixDefinition.Factor, prefixDefinition.Name));
+                }
+                foreach (var unitDefinition in UnitDefinitionRepository.GetUnitDefinitions())
+                {
+                    fileGenerator.AddLine("{0}={1} [{2}]".FormatWith(unitDefinition.Symbol, unitDefinition.Definition, unitDefinition.Name));
+                }
+            }
+        }
+
+        public bool CanImportFrom(string filename) => FileReaderService.FileExists(filename);
+
+        public void ImportFrom(string filename)
+        {
+            using (var fileReader = FileReaderService.Read(filename))
+            {
+                string line = null;
+                line = fileReader.ReadLine();
+                while (line != null)
+                {
+                    if (line.Contains("#"))
+                    {
+                        line = line.Substring(0, line.IndexOf("#"));
+                    }
+                    line = line.Trim(' ', '\r', '\t', '\n');
+                    if (line.Contains("~"))
+                    {
+                        AddPrefixDefintion(line);
+                    }
+                    else if (line.Contains("="))
+                    {
+                        AddUnitDefintion(line);
+                    }
+                    line = fileReader.ReadLine();
+                }
+            }
+        }
+
+        public Tuple<string, string, Action> PrepareNewUnitCreation(string line)
+        {
+            var fields = line.SeparateWithSymbolAndName("=");
+            if (fields != null)
+            {
+                var name = fields.Item1;
+                var symbol = fields.Item2;
+                var definition = fields.Item3;
+
+                var unit = UnitService.Parse(definition);
+
+                return new Tuple<string, string, Action>
+                    (
+                        "Create unit [{0}] (with name [{2}]) with value [{1}]".FormatWith(symbol, unit.AsString, name),
+                        "Define {0} with name {2} as {1} ({3})".FormatWith(symbol, unit.AsString, name, unit.UnitElement.AsString),
+                        () => CreateNewUnit(name, symbol, definition)
+                    );
+            }
+            return null;
+        }
+
+        public Tuple<string, string, Action> PrepareNewPrefixCreation(string line)
+        {
+            var fields = line.SeparateWithSymbolAndName("~");
+            if (fields != null)
+            {
+                var name = fields.Item1;
+                var symbol = fields.Item2;
+                var definition = fields.Item3;
+
+                definition = definition.Replace(" ", "");
+
+                bool inverted = false;
+                if (definition.StartsWith("1/"))
+                {
+                    inverted = true;
+                    definition = definition.Substring(2);
+                }
+
+                var factor = (new ScalarFloat()).Parse(definition) as ScalarFloat;
+
+                return new Tuple<string, string, Action>
+                (
+                    "Create prefix [{0}] (with name [{2}]) with prefix value [{1}{3}]".FormatWith(symbol, factor.AsString, name, inverted ? " inverted" : ""),
+                    "Define {0} with name {2} as {1}{3}".FormatWith(symbol, factor.AsString, name, inverted ? " inverted" : ""),
+                    () => CreateNewPrefix(name, symbol, factor, inverted, definition)
+                );
+            }
+            return null;
+        }
+
+        private void AddUnitDefintion(string line)
+        {
+            PrepareNewUnitCreation(line)?.Item3?.Invoke();
+        }
+
+        private void AddPrefixDefintion(string line)
+        {
+            PrepareNewPrefixCreation(line)?.Item3?.Invoke();
         }
     }
 }
