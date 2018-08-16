@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Wox.UnitConverter.Tool
 {
@@ -45,6 +46,42 @@ namespace Wox.UnitConverter.Tool
             }
 
             return new Tuple<string, string, string>(name, symbol, valueString);
+        }
+
+        public static T GetAndSetDefault<S, T>(this Dictionary<S, T> self, S key, T defaultValue)
+        {
+            if (!self.ContainsKey(key))
+            {
+                self[key] = defaultValue;
+            }
+            return self[key];
+        }
+
+        public static T GetAndSetDefault<S, T>(this Dictionary<S, T> self, S key, Func<T> defaultValueGenerator)
+        {
+            if (!self.ContainsKey(key))
+            {
+                self[key] = defaultValueGenerator();
+            }
+            return self[key];
+        }
+
+        public static T GetOrDefault<S, T>(this Dictionary<S, T> self, S key, T defaultValue)
+        {
+            if (!self.ContainsKey(key))
+            {
+                return defaultValue;
+            }
+            return self[key];
+        }
+
+        public static T GetOrDefault<S, T>(this Dictionary<S, T> self, S key, Func<T> defaultValueGenerator)
+        {
+            if (!self.ContainsKey(key))
+            {
+                return defaultValueGenerator();
+            }
+            return self[key];
         }
     }
 }

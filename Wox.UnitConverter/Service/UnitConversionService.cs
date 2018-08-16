@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
 using Wox.EasyHelper;
+using Wox.EasyHelper.Core.Service;
 using Wox.UnitConverter.Core.Service;
 using Wox.UnitConverter.DomainModel;
 using Wox.UnitConverter.Tool;

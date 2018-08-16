@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Wox.EasyHelper;
 using Wox.EasyHelper.Core.Service;
 using Wox.UnitConverter.Core.Service;
-using Wox.UnitConverter.DomainModel;
 
 namespace Wox.UnitConverter.Service
 {
@@ -47,126 +45,35 @@ namespace Wox.UnitConverter.Service
             }
         }
 
-        private List<CommandInfo> CommandInfos { get; set; } = new List<CommandInfo>();
-        private List<CommandInfo> CommandSearchInfos { get; set; } = new List<CommandInfo>();
-
         private void InitCommands()
         {
             AddCommand("convert", "convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)", ConvertCommand);
-            AddCommand("search", "search [unit|prefix] [PATTERN]", "search info a unit or a prefix", SearchCommand);
+            AddCommand("search", "search [unit|prefix] [PATTERN]", "search info a unit or a prefix", null);
             AddCommand("help", "help", "Get help on this extension (web)", HelpCommand);
             AddCommand("export", "export FILENAME", "Export unit and prefix definitions to the file", ExportCommand);
             AddCommand("import", "import FILENAME", "Import unit and prefix definitions from the file", ImportCommand);
-            AddCommandSearch("unit", "search unit [PATTERN]", "search a unit", SearchUnitCommand);
-            AddCommandSearch("prefix", "search prefix [PATTERN]", "search a prefix", SearchPrefixCommand);
+
+            AddDefaultCommand(DefaultCommand);
+
+            AddCommand("unit", "search unit [PATTERN]", "search a unit", SearchUnitCommand, "search");
+            AddCommand("prefix", "search prefix [PATTERN]", "search a prefix", SearchPrefixCommand, "search");
         }
 
-        private void AddCommand(string name, string title, string subtitle, Func<WoxQuery, int, IEnumerable<WoxResult>> func)
+        public IEnumerable<WoxResult> DefaultCommand(WoxQuery query, int position)
         {
-            CommandInfos.Add(new CommandInfo { Name = name, Title = title, Subtitle = subtitle, ResultGetter = func });
-        }
+            var search = query.GetAllSearchTermsStarting(position);
 
-        private void AddCommand(string name, string title, string subtitle, Action action)
-        {
-            CommandInfos.Add(new CommandInfo { Name = name, Title = title, Subtitle = subtitle, FinalAction = action });
-        }
-
-        private void AddCommandSearch(string name, string title, string subtitle, Func<WoxQuery, int, IEnumerable<WoxResult>> func)
-        {
-            CommandSearchInfos.Add(new CommandInfo { Name = name, Title = title, Subtitle = subtitle, ResultGetter = func, Path = "search" });
-        }
-
-        private void AddCommandSearch(string name, string title, string subtitle, Action action)
-        {
-            CommandSearchInfos.Add(new CommandInfo { Name = name, Title = title, Subtitle = subtitle, FinalAction = action, Path = "search" });
-        }
-
-        public WoxResult GetDefaultCommandResult(string commandName, IEnumerable<CommandInfo> commandInfos)
-        {
-            foreach (var commandInfo in commandInfos)
+            if (search.Contains("="))
             {
-                if (commandName == commandInfo.Name)
-                {
-                    if (commandInfo.FinalAction != null)
-                    {
-                        return GetActionResult(commandInfo.Title, commandInfo.Subtitle, commandInfo.FinalAction);
-                    }
-                    else
-                    {
-                        return GetCompletionResult(commandInfo.Title, commandInfo.Subtitle, () => commandInfo.Path == null ? commandName : commandInfo.Path + WoxContextService.Seperater + commandName);
-                    }
-                }
+                return CreateNewUnit(search);
             }
-            return null;
-        }
-
-        public IEnumerable<WoxResult> SearchCommands(WoxQuery query, int position, IEnumerable<CommandInfo> commandInfos)
-        {
-            var results = new List<WoxResult>();
-            var term = query.GetTermOrEmpty(position);
-            foreach (var commandInfo in commandInfos)
+            else if (search.Contains("~"))
             {
-                var commandName = commandInfo.Name;
-                if (commandName.MatchPattern(term))
-                {
-                    if (term == commandName)
-                    {
-                        if (commandInfo.FinalAction != null)
-                        {
-                            results.Add(GetActionResult(commandInfo.Title, commandInfo.Subtitle, commandInfo.FinalAction));
-                        }
-                        else if (commandInfo.ResultGetter != null)
-                        {
-                            foreach (var result in commandInfo.ResultGetter(query, position + 1))
-                            {
-                                results.Add(result);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (commandInfo.FinalAction != null)
-                        {
-                            results.Add(GetActionResult(commandInfo.Title, commandInfo.Subtitle, commandInfo.FinalAction));
-                        }
-                        else
-                        {
-                            results.Add(GetCompletionResult(commandInfo.Title, commandInfo.Subtitle, () => commandInfo.Path == null ? commandName : commandInfo.Path + WoxContextService.Seperater + commandName));
-                        }
-                    }
-                }
-            }
-            if (results.Count == 0)
-            {
-                return null;
-            }
-            return results;
-        }
-
-        public override IEnumerable<WoxResult> GetResults(WoxQuery query)
-        {
-            var results = SearchCommands(query, 0, CommandInfos);
-
-            if (results != null)
-            {
-                return results;
+                return CreateNewPrefix(search);
             }
             else
             {
-                var search = query.Search;
-
-                if (search.Contains("="))
-                {
-                    return CreateNewUnit(search);
-                }
-                else if (search.Contains("~"))
-                {
-                    return CreateNewPrefix(search);
-                }
-                else
-                {
-                    return ConvertUnit(search);
-                }
+                return ConvertUnit(search);
             }
         }
 
@@ -175,7 +82,7 @@ namespace Wox.UnitConverter.Service
             var filename = query.GetAllSearchTermsStarting(position);
             if (string.IsNullOrEmpty(filename))
             {
-                yield return GetDefaultCommandResult("export", CommandInfos);
+                yield return GetEmptyCommandResult("export", CommandInfos);
             }
             else
             {
@@ -195,7 +102,7 @@ namespace Wox.UnitConverter.Service
             var filename = query.GetAllSearchTermsStarting(position);
             if (string.IsNullOrEmpty(filename))
             {
-                yield return GetDefaultCommandResult("import", CommandInfos);
+                yield return GetEmptyCommandResult("import", CommandInfos);
             }
             else
             {
@@ -230,35 +137,16 @@ namespace Wox.UnitConverter.Service
             }
         }
 
-        private IEnumerable<WoxResult> ConvertCommand(WoxQuery query, int position)
-        {
-            return ConvertUnit(query.GetAllSearchTermsStarting(position));
-        }
+        private IEnumerable<WoxResult> ConvertCommand(WoxQuery query, int position) => ConvertUnit(query.GetAllSearchTermsStarting(position));
 
-        private void HelpCommand()
-        {
-            SystemService.OpenUrl("https://github.com/gissehel/Wox-UnitConverter");
-        }
-
-        private IEnumerable<WoxResult> SearchCommand(WoxQuery query, int position)
-        {
-            var results = SearchCommands(query, position, CommandSearchInfos);
-
-            if (results != null)
-            {
-                return results;
-            }
-            else
-            {
-                return new List<WoxResult> { GetDefaultCommandResult("search", CommandInfos) };
-            }
-        }
+        private void HelpCommand() => SystemService.OpenUrl("https://github.com/gissehel/Wox-UnitConverter");
 
         private IEnumerable<WoxResult> SearchPrefixCommand(WoxQuery query, int position)
         {
             var unitPrefixes = UnitConversionService.GetUnitPrefixes();
             var patterns = query.SearchTerms.Skip(position);
             var patternFull = query.GetAllSearchTermsStarting(position);
+            var hasResult = false;
             foreach (var unitPrefix in unitPrefixes)
             {
                 var searchField = "{0} {1} {2}".FormatWith(unitPrefix.Name, unitPrefix.Symbol, unitPrefix.Namespace);
@@ -275,13 +163,19 @@ namespace Wox.UnitConverter.Service
                     if (patternFull == unitPrefix.Name)
                     {
                         subtitle = subtitle + " - convert";
+                        hasResult = true;
                         yield return GetCompletionResultFinal(title, subtitle, () => "convert {0}m".FormatWith(unitPrefix.Symbol));
                     }
                     else
                     {
+                        hasResult = true;
                         yield return GetCompletionResultFinal(title, subtitle, () => "search prefix {0}".FormatWith(unitPrefix.Name));
                     }
                 }
+            }
+            if (!hasResult)
+            {
+                yield return GetEmptyCommandResult("prefix", GetCommandInfos("search"));
             }
         }
 
@@ -290,6 +184,7 @@ namespace Wox.UnitConverter.Service
             var unitBaseNames = UnitConversionService.GetUnitBaseNames();
             var patterns = query.SearchTerms.Skip(position);
             var patternFull = query.GetAllSearchTermsStarting(position);
+            var hasResult = false;
             foreach (var unitBaseName in unitBaseNames)
             {
                 var searchField = "{0} {1} {2}".FormatWith(unitBaseName.Name, unitBaseName.Symbol, unitBaseName.Namespace);
@@ -306,13 +201,19 @@ namespace Wox.UnitConverter.Service
                     if (patternFull == unitBaseName.Name)
                     {
                         subtitle = subtitle + " - convert";
+                        hasResult = true;
                         yield return GetCompletionResultFinal(title, subtitle, () => "convert {0}".FormatWith(unitBaseName.Symbol));
                     }
                     else
                     {
+                        hasResult = true;
                         yield return GetCompletionResultFinal(title, subtitle, () => "search unit {0}".FormatWith(unitBaseName.Name));
                     }
                 }
+            }
+            if (!hasResult)
+            {
+                yield return GetEmptyCommandResult("unit", GetCommandInfos("search"));
             }
         }
     }

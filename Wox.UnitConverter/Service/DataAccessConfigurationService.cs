@@ -1,31 +1,19 @@
 ﻿using FluentDataAccess.Core.Service;
-using System;
-using System.IO;
+using Wox.EasyHelper.Core.Service;
 
 namespace Wox.UnitConverter.Service
 {
     public class DataAccessConfigurationService : IDataAccessConfigurationService
     {
-        public DataAccessConfigurationService(string applicationName)
+        public DataAccessConfigurationService(ISystemService systemService)
         {
-            ApplicationName = applicationName;
+            SystemService = systemService;
         }
 
-        public string ApplicationDataPath => GetApplicationDataPath();
+        private ISystemService SystemService { get; }
 
-        private string GetApplicationDataPath()
-        {
-            var appDataPathParent = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var appDataPath = Path.Combine(appDataPathParent, ApplicationName);
-            if (!Directory.Exists(appDataPath))
-            {
-                Directory.CreateDirectory(appDataPath);
-            }
-            return appDataPath;
-        }
+        public string ApplicationDataPath => SystemService.ApplicationDataPath;
 
-        public string DatabaseName => ApplicationName;
-
-        public string ApplicationName { get; }
+        public string DatabaseName => SystemService.ApplicationName;
     }
 }
