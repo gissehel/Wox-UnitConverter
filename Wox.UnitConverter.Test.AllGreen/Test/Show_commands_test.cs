@@ -19,8 +19,23 @@ namespace Wox.UnitConverter.Test.AllGreen.Test
 
             .UsingList<Wox_results_fixture>()
             .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
-            .Check("convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("convert <UNIT> [ -> <UNIT> [ : <UNIT> ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("search <unit|prefix> [PATTERN]", "search info a unit or a prefix")
             .Check("help", "Get help on this extension (web)")
+            .Check("export <FILENAME>", "Export unit and prefix definitions to the file")
+            .Check("import <FILENAME>", "Import unit and prefix definitions from the file")
+            .Check("version", "Wox.UnitConverter version 1.0.7")
+            .EndUsing()
+
+            .Using<Wox_bar_fixture>()
+            .DoAction(f => f.Write_query(@"unit p"))
+            .EndUsing()
+
+            .UsingList<Wox_results_fixture>()
+            .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
+            .Check("help", "Get help on this extension (web)")
+            .Check("export <FILENAME>", "Export unit and prefix definitions to the file")
+            .Check("import <FILENAME>", "Import unit and prefix definitions from the file")
             .EndUsing()
 
             .Using<Wox_bar_fixture>()
@@ -29,18 +44,11 @@ namespace Wox.UnitConverter.Test.AllGreen.Test
 
             .UsingList<Wox_results_fixture>()
             .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
-            .Check("convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("convert <UNIT> [ -> <UNIT> [ : <UNIT> ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("search <unit|prefix> [PATTERN]", "search info a unit or a prefix")
             .Check("help", "Get help on this extension (web)")
-            .EndUsing()
-
-            .Using<Wox_bar_fixture>()
-            .DoAction(f => f.Write_query(@"unit e"))
-            .EndUsing()
-
-            .UsingList<Wox_results_fixture>()
-            .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
-            .Check("convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)")
-            .Check("help", "Get help on this extension (web)")
+            .Check("export <FILENAME>", "Export unit and prefix definitions to the file")
+            .Check("version", "Wox.UnitConverter version 1.0.7")
             .EndUsing()
 
             .Using<Wox_bar_fixture>()
@@ -49,7 +57,8 @@ namespace Wox.UnitConverter.Test.AllGreen.Test
 
             .UsingList<Wox_results_fixture>()
             .With<Wox_results_fixture.Result>(f => f.Title, f => f.SubTitle)
-            .Check("convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("convert <UNIT> [ -> <UNIT> [ : <UNIT> ]]", "Convert a value to another unit (express in a third unit)")
+            .Check("version", "Wox.UnitConverter version 1.0.7")
             .EndUsing()
 
             .Using<Wox_bar_fixture>()

@@ -45,6 +45,8 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
 
             WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitConversionService, systemService);
 
+            systemService.ApplicationDataPath = TestPath;
+
             dataAccessService.Init();
             woxUnitResultFinder.Init();
 

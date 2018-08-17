@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Wox.EasyHelper;
 using Wox.EasyHelper.Core.Service;
 using Wox.UnitConverter.Core.Service;
@@ -47,11 +49,12 @@ namespace Wox.UnitConverter.Service
 
         private void InitCommands()
         {
-            AddCommand("convert", "convert UNIT [ -> UNIT [ : UNIT ]]", "Convert a value to another unit (express in a third unit)", ConvertCommand);
-            AddCommand("search", "search [unit|prefix] [PATTERN]", "search info a unit or a prefix", null);
+            AddCommand("convert", "convert <UNIT> [ -> <UNIT> [ : <UNIT> ]]", "Convert a value to another unit (express in a third unit)", ConvertCommand);
+            AddCommand("search", "search <unit|prefix> [PATTERN]", "search info a unit or a prefix", null);
             AddCommand("help", "help", "Get help on this extension (web)", HelpCommand);
-            AddCommand("export", "export FILENAME", "Export unit and prefix definitions to the file", ExportCommand);
-            AddCommand("import", "import FILENAME", "Import unit and prefix definitions from the file", ImportCommand);
+            AddCommand("export", "export <FILENAME>", "Export unit and prefix definitions to the file", ExportCommand);
+            AddCommand("import", "import <FILENAME>", "Import unit and prefix definitions from the file", ImportCommand);
+            AddCommand("version", "version", "Wox.UnitConverter version {0}".FormatWith(Version), () => { });
 
             AddDefaultCommand(DefaultCommand);
 
@@ -216,5 +219,7 @@ namespace Wox.UnitConverter.Service
                 yield return GetEmptyCommandResult("unit", GetCommandInfos("search"));
             }
         }
+
+        public string Version => FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
     }
 }
