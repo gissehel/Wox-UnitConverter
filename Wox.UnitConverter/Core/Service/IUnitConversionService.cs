@@ -4,7 +4,7 @@ using Unit.Lib.Core.DomainModel;
 
 namespace Wox.UnitConverter.Core.Service
 {
-    public interface IUnitConversionService
+    public interface IUnitConversionService : IDisposable
     {
         void Init();
 

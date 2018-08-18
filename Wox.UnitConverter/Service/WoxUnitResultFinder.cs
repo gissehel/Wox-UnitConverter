@@ -9,7 +9,7 @@ using Wox.UnitConverter.Core.Service;
 
 namespace Wox.UnitConverter.Service
 {
-    public class WoxUnitResultFinder : WoxResultFinderBase
+    public class WoxUnitResultFinder : WoxResultFinder
     {
         public IUnitConversionService UnitConversionService { get; }
         public ISystemService SystemService { get; }
@@ -21,10 +21,15 @@ namespace Wox.UnitConverter.Service
             SystemService = systemService;
         }
 
-        public void Init()
+        public override void Init()
         {
             UnitConversionService.Init();
             InitCommands();
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
 
         public IEnumerable<WoxResult> CreateNewUnit(string search)

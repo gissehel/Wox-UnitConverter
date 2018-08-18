@@ -41,7 +41,7 @@ namespace Wox.UnitConverter.Test.AllGreen.Helper
             IUnitDefinitionRepository unitDefinitionRepository = new UnitDefinitionRepository(dataAccessService);
             IFileGeneratorService fileGeneratorService = new FileGeneratorServiceMock();
             IFileReaderService fileReaderService = new FileReaderServiceMock();
-            IUnitConversionService unitConversionService = new UnitConversionService(unitService, prefixDefinitionRepository, unitDefinitionRepository, fileGeneratorService, fileReaderService);
+            IUnitConversionService unitConversionService = new UnitConversionService(unitService, dataAccessService, prefixDefinitionRepository, unitDefinitionRepository, fileGeneratorService, fileReaderService);
 
             WoxUnitResultFinder woxUnitResultFinder = new WoxUnitResultFinder(woxContextService, unitConversionService, systemService);
 

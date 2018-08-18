@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentDataAccess.Core.Service;
+using System;
 using System.Collections.Generic;
 using Unit.Lib.Core.DomainModel;
 using Unit.Lib.Core.Service;
@@ -13,14 +14,16 @@ namespace Wox.UnitConverter.Service
     public class UnitConversionService : IUnitConversionService
     {
         private IUnitService<ScalarFloat, float> UnitService { get; }
+        private IDataAccessService DataAccessService { get; }
         private IPrefixDefinitionRepository PrefixDefinitionRepository { get; }
         private IUnitDefinitionRepository UnitDefinitionRepository { get; }
         public IFileGeneratorService FileGeneratorService { get; }
         public IFileReaderService FileReaderService { get; }
 
-        public UnitConversionService(IUnitService<ScalarFloat, float> unitService, IPrefixDefinitionRepository prefixDefinitionRepository, IUnitDefinitionRepository unitDefinitionRepository, IFileGeneratorService fileGeneratorService, IFileReaderService fileReaderService)
+        public UnitConversionService(IUnitService<ScalarFloat, float> unitService, IDataAccessService dataAccessService, IPrefixDefinitionRepository prefixDefinitionRepository, IUnitDefinitionRepository unitDefinitionRepository, IFileGeneratorService fileGeneratorService, IFileReaderService fileReaderService)
         {
             UnitService = unitService;
+            DataAccessService = dataAccessService;
             PrefixDefinitionRepository = prefixDefinitionRepository;
             UnitDefinitionRepository = unitDefinitionRepository;
             FileGeneratorService = fileGeneratorService;
@@ -139,6 +142,7 @@ namespace Wox.UnitConverter.Service
 
         public void Init()
         {
+            DataAccessService.Init();
             PrefixDefinitionRepository.Init();
             UnitDefinitionRepository.Init();
 
@@ -287,5 +291,10 @@ namespace Wox.UnitConverter.Service
         public IEnumerable<UnitBaseName<ScalarFloat, float>> GetUnitBaseNames() => UnitService.GetUnitBaseNames();
 
         public IEnumerable<UnitPrefix<ScalarFloat, float>> GetUnitPrefixes() => UnitService.GetUnitPrefixes();
+
+        public void Dispose()
+        {
+            DataAccessService.Dispose();
+        }
     }
 }
